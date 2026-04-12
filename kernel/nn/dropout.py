@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from kernel.core.tensor import Tensor
 from kernel.nn.module import Module
 
 
@@ -10,5 +11,5 @@ class Dropout(Module):
             raise ValueError(f"dropout probability must be in [0, 1), got {p}")
         self.p = p
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         return x.dropout(p=self.p, training=self.training)

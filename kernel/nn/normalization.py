@@ -22,14 +22,26 @@ class BatchNorm1d(Module):
         self.affine = affine
 
         if affine:
-            self.weight = Tensor(np.ones(num_features, dtype=np.float64), requires_grad=True)
-            self.bias = Tensor(np.zeros(num_features, dtype=np.float64), requires_grad=True)
+            self.weight = Tensor(
+                np.ones(num_features, dtype=np.float64),
+                requires_grad=True,
+            )
+            self.bias = Tensor(
+                np.zeros(num_features, dtype=np.float64),
+                requires_grad=True,
+            )
         else:
             self.weight = None
             self.bias = None
 
-        self.register_buffer("running_mean", np.zeros(num_features, dtype=np.float64))
-        self.register_buffer("running_var", np.ones(num_features, dtype=np.float64))
+        self.register_buffer(
+            "running_mean",
+            np.zeros(num_features, dtype=np.float64),
+        )
+        self.register_buffer(
+            "running_var",
+            np.ones(num_features, dtype=np.float64),
+        )
 
     def forward(self, x: Tensor) -> Tensor:
         if x.data.ndim != 2:
@@ -46,31 +58,26 @@ class BatchNorm1d(Module):
             batch_mean = x.data.mean(axis=0)
             batch_var = x.data.var(axis=0)
 
-            new_running_mean = (
-                (1.0 - self.momentum) * self.running_mean + self.momentum * batch_mean
+            self.running_mean.data = (
+                (1.0 - self.momentum) * self.running_mean.data
+                + self.momentum * batch_mean
             )
-            new_running_var = (
-                (1.0 - self.momentum) * self.running_var + self.momentum * batch_var
+            self.running_var.data = (
+                (1.0 - self.momentum) * self.running_var.data
+                + self.momentum * batch_var
             )
 
-            self._buffers["running_mean"] = new_running_mean
-            self._buffers["running_var"] = new_running_var
-            object.__setattr__(self, "running_mean", new_running_mean)
-            object.__setattr__(self, "running_var", new_running_var)
-
-            mean = Tensor(batch_mean, requires_grad=False)
-            var = Tensor(batch_var, requires_grad=False)
+            mean = Tensor(batch_mean, requires_grad=False, device=x.device)
+            var = Tensor(batch_var, requires_grad=False, device=x.device)
         else:
-            mean = Tensor(self.running_mean, requires_grad=False)
-            var = Tensor(self.running_var, requires_grad=False)
+            mean = self.running_mean
+            var = self.running_var
 
         x_hat = (x - mean) / (var + self.eps).sqrt()
 
         if self.affine:
             return x_hat * self.weight + self.bias
         return x_hat
-
-
 class BatchNorm2d(Module):
     def __init__(
         self,
@@ -123,23 +130,20 @@ class BatchNorm2d(Module):
             batch_mean = x.data.mean(axis=(0, 2, 3), keepdims=True)
             batch_var = x.data.var(axis=(0, 2, 3), keepdims=True)
 
-            new_running_mean = (
-                (1.0 - self.momentum) * self.running_mean + self.momentum * batch_mean
+            self.running_mean.data = (
+                (1.0 - self.momentum) * self.running_mean.data
+                + self.momentum * batch_mean
             )
-            new_running_var = (
-                (1.0 - self.momentum) * self.running_var + self.momentum * batch_var
+            self.running_var.data = (
+                (1.0 - self.momentum) * self.running_var.data
+                + self.momentum * batch_var
             )
 
-            self._buffers["running_mean"] = new_running_mean
-            self._buffers["running_var"] = new_running_var
-            object.__setattr__(self, "running_mean", new_running_mean)
-            object.__setattr__(self, "running_var", new_running_var)
-
-            mean = Tensor(batch_mean, requires_grad=False)
-            var = Tensor(batch_var, requires_grad=False)
+            mean = Tensor(batch_mean, requires_grad=False, device=x.device)
+            var = Tensor(batch_var, requires_grad=False, device=x.device)
         else:
-            mean = Tensor(self.running_mean, requires_grad=False)
-            var = Tensor(self.running_var, requires_grad=False)
+            mean = self.running_mean
+            var = self.running_var
 
         x_hat = (x - mean) / (var + self.eps).sqrt()
 
@@ -189,8 +193,6 @@ class LayerNorm(Module):
             weight=self.weight,
             bias=self.bias,
         )
-
-
 class GroupNorm(Module):
     def __init__(
             self,

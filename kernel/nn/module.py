@@ -29,9 +29,13 @@ class Module:
         object.__setattr__(self, name, value)
 
     def register_buffer(self, name: str, value) -> None:
-        array = np.array(value, copy=True)
-        self._buffers[name] = array
-        object.__setattr__(self, name, array)
+        if not isinstance(value, Tensor):
+            value = Tensor(value, requires_grad=False)
+        else:
+            value = Tensor(value.data, requires_grad=False, device=value.device)
+
+        self._buffers[name] = value
+        object.__setattr__(self, name, value)
 
     def parameters(self) -> Iterator[Tensor]:
         for param in self._parameters.values():
@@ -45,17 +49,39 @@ class Module:
         for name, module in self._modules.items():
             yield from module.named_parameters(prefix=f"{prefix}{name}.")
 
-    def buffers(self) -> Iterator[np.ndarray]:
+    def buffers(self) -> Iterator[Tensor]:
         for buf in self._buffers.values():
             yield buf
         for module in self._modules.values():
             yield from module.buffers()
 
-    def named_buffers(self, prefix: str = "") -> Iterator[tuple[str, np.ndarray]]:
+    def named_buffers(self, prefix: str = "") -> Iterator[tuple[str, Tensor]]:
         for name, buf in self._buffers.items():
             yield prefix + name, buf
         for name, module in self._modules.items():
             yield from module.named_buffers(prefix=f"{prefix}{name}.")
+
+    def to(self, device: str):
+        for name, param in list(self._parameters.items()):
+            moved = param.to(device)
+            self._parameters[name] = moved
+            object.__setattr__(self, name, moved)
+
+        for name, buf in list(self._buffers.items()):
+            moved = buf.to(device)
+            self._buffers[name] = moved
+            object.__setattr__(self, name, moved)
+
+        for module in self._modules.values():
+            module.to(device)
+
+        return self
+
+    def cpu(self):
+        return self.to("cpu")
+
+    def cuda(self):
+        return self.to("cuda")
 
     def zero_grad(self) -> None:
         for param in self.parameters():
@@ -75,10 +101,10 @@ class Module:
         state = {}
 
         for name, param in self.named_parameters():
-            state[name] = param.data.copy()
+            state[name] = param.numpy().copy()
 
         for name, buf in self.named_buffers():
-            state[name] = np.array(buf, copy=True)
+            state[name] = buf.numpy().copy()
 
         return state
 
@@ -107,20 +133,20 @@ class Module:
                     f"expected {param.data.shape}, got {value.shape}"
                 )
 
-            param.data = value
+            param.data = param._backend.asarray(value, dtype=param.data.dtype)
 
-        for name in current_buffers:
+        for name, buf in current_buffers.items():
             value = np.array(state_dict[name], copy=True)
 
-            if current_buffers[name].shape != value.shape:
+            if buf.data.shape != value.shape:
                 raise ValueError(
                     f"Shape mismatch for '{name}': "
-                    f"expected {current_buffers[name].shape}, got {value.shape}"
+                    f"expected {buf.data.shape}, got {value.shape}"
                 )
 
             self._set_buffer_by_name(name, value)
 
-    def _set_buffer_by_name(self, name: str, value: np.ndarray) -> None:
+    def _set_buffer_by_name(self, name: str, value) -> None:
         parts = name.split(".")
         module = self
 
@@ -128,8 +154,17 @@ class Module:
             module = module._modules[part]
 
         buf_name = parts[-1]
-        module._buffers[buf_name] = value
-        object.__setattr__(module, buf_name, value)
+        old_buf = module._buffers[buf_name]
+
+        new_buf = Tensor(
+            value,
+            requires_grad=False,
+            dtype=old_buf.data.dtype,
+            device=old_buf.device,
+        )
+
+        module._buffers[buf_name] = new_buf
+        object.__setattr__(module, buf_name, new_buf)
 
     def forward(self, *args, **kwargs):
         raise NotImplementedError
