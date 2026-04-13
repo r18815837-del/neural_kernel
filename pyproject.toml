@@ -5,22 +5,54 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "neural-kernel"
 version = "0.1.0"
-description = "A mini deep learning framework built from scratch with NumPy."
+description = "A mini deep learning framework with autograd, NumPy/CuPy backends, CPU/CUDA support, CNNs, Transformers, and text generation."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
-  { name = "Your Name" }
+  { name = "Raian" }
+]
+keywords = [
+  "deep-learning",
+  "autograd",
+  "neural-networks",
+  "transformers",
+  "cuda",
+  "numpy",
+  "cupy",
+  "machine-learning",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
   "numpy>=1.24",
-  "matplotlib>=3.7",
 ]
 
+[project.urls]
+Homepage = "https://github.com/r18815837-del/neural_kernel"
+Repository = "https://github.com/r18815837-del/neural_kernel"
+Issues = "https://github.com/r18815837-del/neural_kernel/issues"
+
 [project.optional-dependencies]
+test = [
+  "pytest>=8.0",
+]
 dev = [
   "pytest>=8.0",
   "torch>=2.0",
+]
+examples = [
+  "matplotlib>=3.7",
 ]
 
 [tool.setuptools]
@@ -29,10 +61,10 @@ include-package-data = true
 [tool.setuptools.packages.find]
 include = ["kernel*"]
 
+[tool.setuptools.package-data]
+kernel = ["py.typed"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests", "tests_parity"]
 python_files = ["test_*.py"]
 addopts = "-q"
-
-[tool.setuptools.package-data]
-kernel = ["py.typed"]

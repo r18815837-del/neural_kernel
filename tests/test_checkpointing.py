@@ -126,9 +126,76 @@ def test_optimizer_state_can_be_saved_and_loaded_if_supported():
 
         save_checkpoint(model, path, optimizer)
 
-        loss = make_train_step(model)
-        optimizer.step()
+        optimizer.lr = 0.5
+        optimizer.defaults["lr"] = 0.5
 
         load_checkpoint(model, path, optimizer)
 
-        assert optimizer is not None
+        assert optimizer.lr == 0.01
+        assert optimizer.defaults["lr"] == 0.01
+
+def test_optimizer_state_restore_recovers_lr_and_state_dict():
+        model = make_model()
+        optimizer = SGD(model.parameters(), lr=0.01)
+
+        if not optimizer_supports_checkpoint(optimizer):
+            pytest.skip("optimizer does not yet implement state_dict/load_state_dict")
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = os.path.join(tmpdir, "checkpoint.pkl")
+
+            save_checkpoint(model, path, optimizer)
+
+            optimizer.lr = 0.5
+            optimizer.defaults["lr"] = 0.5
+
+            load_checkpoint(model, path, optimizer)
+
+            assert optimizer.lr == 0.01
+            assert optimizer.defaults["lr"] == 0.01
+
+            state = optimizer.state_dict()
+            assert state["meta"]["optimizer_class"] == "SGD"
+            assert state["meta"]["format_version"] == 1
+            assert state["defaults"]["lr"] == 0.01
+
+def test_checkpoint_resume_matches_uninterrupted_training_for_sgd():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = os.path.join(tmpdir, "checkpoint.pkl")
+
+        model_a = make_model()
+        optimizer_a = SGD(model_a.parameters(), lr=0.01)
+
+        model_b = make_model()
+        optimizer_b = SGD(model_b.parameters(), lr=0.01)
+
+        # Synchronize initial weights so both runs start identically.
+        model_b.load_state_dict(model_a.state_dict())
+
+        # Uninterrupted run: 2 steps
+        for _ in range(2):
+            optimizer_a.zero_grad()
+            make_train_step(model_a)
+            optimizer_a.step()
+
+        uninterrupted_params = clone_params(model_a)
+
+        # Interrupted run: 1 step, save, reload, 1 more step
+        optimizer_b.zero_grad()
+        make_train_step(model_b)
+        optimizer_b.step()
+
+        save_checkpoint(model_b, path, optimizer_b)
+
+        resumed_model = make_model()
+        resumed_optimizer = SGD(resumed_model.parameters(), lr=999.0)
+
+        load_checkpoint(resumed_model, path, resumed_optimizer)
+
+        resumed_optimizer.zero_grad()
+        make_train_step(resumed_model)
+        resumed_optimizer.step()
+
+        resumed_params = clone_params(resumed_model)
+
+        assert params_allclose(uninterrupted_params, resumed_params, atol=1e-6)

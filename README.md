@@ -1,25 +1,19 @@
 # Neural Kernel
 
-A mini deep learning framework built from scratch with NumPy.
+A mini deep learning framework with autograd, NumPy/CuPy backends, CPU/CUDA execution, CNN support, Transformer modules, language-model generation, and checkpointed training.
 
-**Neural Kernel** is an educational yet practical deep learning framework that implements tensors, autograd, neural network modules, optimizers, normalization, CNN layers, Transformer blocks, language-model generation, checkpointing, training utilities, and CUDA-backed execution through CuPy.
-
-The goal of the project is to understand how modern deep learning frameworks work internally by building the essential pieces manually while still keeping the code structured, testable, and usable.
-
----
+Neural Kernel is built from scratch to make deep learning internals understandable without giving up structure, testing discipline, or practical usability.
 
 ## Highlights
 
-- Tensor + autograd engine built from scratch
+- Tensor + autograd engine
+- NumPy backend and CuPy CUDA path
 - Device-aware tensor API
-- NumPy backend + CuPy CUDA path
-- CNN path: convolutions, pooling, normalization, residual block
-- Transformer path: attention, multi-head attention, encoder, classifier, LM
-- Language-model generation: greedy, temperature, top-k, top-p
-- Checkpointing: model save/load, resume training
-- Clean public API
-- Large regression suite
-- Numerical parity tests against PyTorch for key components
+- CNN stack: convolutions, pooling, normalization, residual block
+- Transformer stack: attention, multi-head attention, encoder, classifier, LM
+- Generation: greedy, temperature, top-k, top-p
+- Checkpointing + resume
+- PyTorch parity coverage for key modules
 - Real CUDA validation on local NVIDIA GPU
 
 ---

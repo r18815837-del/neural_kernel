@@ -1,0 +1,38 @@
+- [x] Review current optimizer implementation
+- [x] Define `state_dict()` schema
+- [x] Define `load_state_dict()` validation rules
+- [x] Confirm format versioning strategy
+- [x] Implement `optimizer.state_dict()`
+- [x] Implement `optimizer.load_state_dict()`
+- [x] Ensure optimizer defaults are serialized
+- [x] Ensure per-parameter state is serialized
+- [x] Add unit test for `state_dict()` structure
+- [x] Add unit test for `load_state_dict()` round-trip
+- [x] Add invalid-state test cases
+- [x] Add parameter mismatch test case
+- [x] Add integration resume test
+- [x] Review checkpoint format
+- [x] Ensure optimizer state is saved in checkpoint
+- [x] Ensure optimizer state is restored from checkpoint
+- [x] Validate resumed run against uninterrupted run
+- [x] Review `pyproject.toml`
+- [x] Verify package name
+- [x] Verify description and metadata
+- [x] Review core dependencies
+- [x] Define `dev` extra
+- [x] Define `examples` extra
+- [x] Define `test` extra
+- [x] Test `pip install .`
+- [x] Test `pip install -e .`
+- [x] Test `pip install -e .[dev]`
+- [x] Verify package import
+- [x] Finalize release checklist
+- [x] Finalize benchmark scope
+- [x] Create `benchmarks/` directory
+- [x] Create benchmark runner skeleton
+- [x] Create timing utilities
+- [x] Create environment capture helper
+- [x] Tensor ops case scaffold
+- [x] Linear case scaffold
+- [x] Select `tiny_gpt`
+- [x] Select `text_classification`
