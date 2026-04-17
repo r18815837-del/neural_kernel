@@ -57,7 +57,7 @@ def test_bearer_enabled_but_not_implemented():
         svc.authenticate(authorization="Bearer fake-jwt-token")
         assert False, "Should raise"
     except AuthenticationError as e:
-        assert e.code == "bearer_not_implemented"
+        assert e.code == "jwt_key_missing"
 
 
 def test_unsupported_auth_scheme():

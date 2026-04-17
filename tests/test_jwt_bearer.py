@@ -25,7 +25,7 @@ from api.auth.models import (
 )
 
 
-SECRET = "test-secret-key-for-jwt"
+SECRET = "test-secret-key-for-jwt-min-32b!"
 ALGORITHM = "HS256"
 
 
@@ -177,7 +177,7 @@ class TestJWTErrors:
         assert exc_info.value.code == "token_expired"
 
     def test_bad_signature(self):
-        token = _encode(_valid_claims(), secret="wrong-secret")
+        token = _encode(_valid_claims(), secret="wrong-secret-key-at-least-32bytes!")
         with pytest.raises(AuthenticationError) as exc_info:
             validate_bearer_token(token, _config())
         assert exc_info.value.code in ("token_decode_error", "token_invalid")
