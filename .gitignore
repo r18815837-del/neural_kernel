@@ -1,45 +1,48 @@
-# Python
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 *.so
-
-# Virtual environments
 .venv/
 venv/
 env/
-
-# Pytest
 .pytest_cache/
-
-# Coverage / test artifacts
 .coverage
 htmlcov/
-
-# Jupyter
 .ipynb_checkpoints/
-
-# Build artifacts
 build/
 dist/
 *.egg-info/
-
-# IDE / editors
 .vscode/
 .idea/
-
-# OS files
 .DS_Store
 Thumbs.db
-
-# Local checkpoints / outputs
 checkpoints/
 runs/
 outputs/
-
-# CuPy / CUDA cache
 .cupy/
-
-# Local helper files
 project_tree.txt
+.env
+*.db
+data/corpus/
+data/*.db
+artifacts/
+LLM_LAYER_SUMMARY.md
+docs/architecture/FOUNDER_PITCH_SUMMARY.md
+docs/architecture/LANDING_PAGE_COPY.md
+docs/architecture/ONE_MINUTE_PITCH.md
+docs/architecture/STARTUP_*.md
+docs/architecture/THIRTY_SECOND_PITCH.md
+docs/architecture/demo_artifacts/
+docs/architecture/demo_case_*/
+docs/business/
+company_agents/
+flutter_client/.dart_tool/
+flutter_client/.flutter-plugins
+flutter_client/.flutter-plugins-dependencies
+flutter_client/build/
+flutter_client/.packages
+flutter_client/pubspec.lock
+flutter_client/android/.gradle/
+flutter_client/ios/Pods/
+flutter_client/.metadata

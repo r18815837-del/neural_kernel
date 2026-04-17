@@ -1,0 +1,17 @@
+# Neural Kernel — Ruff configuration
+# https://docs.astral.sh/ruff/
+
+[lint]
+select = ["E", "F", "W", "I"]
+ignore = [
+    "E501",   # line too long — handled by formatter
+    "E741",   # ambiguous variable name (common in math-heavy code)
+    "F841",   # local variable assigned but never used (WIP code)
+]
+
+[lint.isort]
+known-first-party = ["kernel", "cognition", "persistence", "api", "nk_app", "runtime", "integration"]
+
+[format]
+line-length = 100
+quote-style = "double"

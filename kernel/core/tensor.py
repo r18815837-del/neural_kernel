@@ -31,7 +31,7 @@ class Tensor:
         if isinstance(data, Tensor):
             data = data.data
 
-        target_dtype = dtype if dtype is not None else np.float64
+        target_dtype = dtype if dtype is not None else np.float32
         self.data = self._backend.asarray(data, dtype=target_dtype)
 
         self.requires_grad = requires_grad

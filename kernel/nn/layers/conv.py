@@ -44,7 +44,7 @@ class Conv2d(Module):
 
         if bias:
             self.bias = Tensor(
-                np.zeros(out_channels, dtype=np.float64),
+                np.zeros(out_channels, dtype=np.float32),
                 requires_grad=True,
             )
         else:

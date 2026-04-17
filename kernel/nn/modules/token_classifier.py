@@ -45,7 +45,7 @@ class TokenTransformerClassifier(Module):
         self.embedding = Embedding(vocab_size, d_model)
 
         if use_cls_token:
-            cls_init = np.zeros((1, 1, d_model), dtype=np.float64)
+            cls_init = np.zeros((1, 1, d_model), dtype=np.float32)
             self.cls_token = Tensor(cls_init, requires_grad=True)
         else:
             self.cls_token = None
@@ -78,7 +78,7 @@ class TokenTransformerClassifier(Module):
         # mask: (B, 1, 1, T) -> (B, 1, 1, T+1)
         b = mask.shape[0]
         cls_valid = Tensor(
-            np.zeros((b, 1, 1, 1), dtype=np.float64),
+            np.zeros((b, 1, 1, 1), dtype=np.float32),
             requires_grad=False,
             device=mask.device,
         )

@@ -60,3 +60,4 @@
 - [x] release notes are drafted
 - [x] release candidate has been reviewed
 - [x] publish flow is understood
+- release candidate зафиксирован

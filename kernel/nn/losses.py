@@ -12,6 +12,7 @@ class CrossEntropyLoss(Module):
         if isinstance(targets, Tensor):
             targets_data = targets.data
         else:
-            targets_data = np.asarray(targets)
+            xp = logits.xp
+            targets_data = xp.asarray(targets)
 
         return cross_entropy(logits, targets_data)

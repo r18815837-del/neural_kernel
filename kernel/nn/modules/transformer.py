@@ -98,12 +98,12 @@ class PositionalEncoding(Module):
         self.d_model = d_model
         self.max_len = max_len
 
-        position = np.arange(max_len, dtype=np.float64).reshape(max_len, 1)
+        position = np.arange(max_len, dtype=np.float32).reshape(max_len, 1)
         div_term = np.exp(
-            np.arange(0, d_model, 2, dtype=np.float64) * (-np.log(10000.0) / d_model)
+            np.arange(0, d_model, 2, dtype=np.float32) * (-np.log(10000.0) / d_model)
         )
 
-        pe = np.zeros((1, max_len, d_model), dtype=np.float64)
+        pe = np.zeros((1, max_len, d_model), dtype=np.float32)
         pe[0, :, 0::2] = np.sin(position * div_term)
 
         if d_model % 2 == 0:

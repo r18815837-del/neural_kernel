@@ -25,13 +25,15 @@ class Embedding(Module):
 
         scale = np.sqrt(1.0 / embedding_dim)
         weight = np.random.randn(num_embeddings, embedding_dim) * scale
-        self.weight = Tensor(weight.astype(np.float64), requires_grad=True)
+        self.weight = Tensor(weight.astype(np.float32), requires_grad=True)
 
     def forward(self, indices) -> Tensor:
         if isinstance(indices, Tensor):
             indices_data = indices.data
         else:
-            indices_data = np.asarray(indices)
+            # Use the weight's backend (numpy or cupy) to convert indices.
+            xp = self.weight.xp
+            indices_data = xp.asarray(indices)
 
         if indices_data.ndim < 1:
             raise ValueError(
@@ -42,7 +44,7 @@ class Embedding(Module):
         if indices_data.dtype.kind not in {"i", "u"}:
             indices_data = indices_data.astype(np.int64)
 
-        if indices_data.min() < 0 or indices_data.max() >= self.num_embeddings:
+        if int(indices_data.min()) < 0 or int(indices_data.max()) >= self.num_embeddings:
             raise ValueError(
                 f"Embedding indices out of range [0, {self.num_embeddings}), "
                 f"got min={indices_data.min()}, max={indices_data.max()}"

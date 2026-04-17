@@ -125,7 +125,7 @@ class TokenTransformerLM(Module):
         if isinstance(token_ids, Tensor):
             current = token_ids.detach().numpy().astype(np.int64)
         else:
-            current = np.asarray(token_ids, dtype=np.int64)
+            current = np.array(token_ids, dtype=np.int64)
 
         if current.ndim != 2:
             raise ValueError(

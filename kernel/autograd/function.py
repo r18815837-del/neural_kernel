@@ -1,17 +1,7 @@
 from __future__ import annotations
+from typing import Any, List
+from .context import Context
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Tuple
-
-
-@dataclass
-class Context:
-    parents: Tuple[Any, ...] = field(default_factory=tuple)
-    saved_tensors: Tuple[Any, ...] = field(default_factory=tuple)
-    meta: Dict[str, Any] = field(default_factory=dict)
-
-    def save_for_backward(self, *tensors: Any) -> None:
-        self.saved_tensors = tuple(tensors)
 
 
 class Function:

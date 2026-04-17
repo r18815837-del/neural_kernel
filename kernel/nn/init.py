@@ -28,14 +28,16 @@ def _calculate_fan_in_and_fan_out(tensor: Tensor) -> tuple[int, int]:
 def xavier_uniform_(tensor: Tensor, gain: float = 1.0) -> Tensor:
     fan_in, fan_out = _calculate_fan_in_and_fan_out(tensor)
     limit = gain * math.sqrt(6.0 / (fan_in + fan_out))
-    tensor.data = np.random.uniform(-limit, limit, size=tensor.data.shape)
+    xp = tensor.xp
+    tensor.data = xp.random.uniform(-limit, limit, size=tensor.data.shape).astype(tensor.data.dtype)
     return tensor
 
 
 def xavier_normal_(tensor: Tensor, gain: float = 1.0) -> Tensor:
     fan_in, fan_out = _calculate_fan_in_and_fan_out(tensor)
     std = gain * math.sqrt(2.0 / (fan_in + fan_out))
-    tensor.data = np.random.normal(0.0, std, size=tensor.data.shape)
+    xp = tensor.xp
+    tensor.data = xp.random.normal(0.0, std, size=tensor.data.shape).astype(tensor.data.dtype)
     return tensor
 
 
@@ -44,7 +46,8 @@ def kaiming_uniform_(tensor: Tensor, a: float = 0.0) -> Tensor:
     gain = math.sqrt(2.0 / (1.0 + a ** 2))
     std = gain / math.sqrt(fan_in)
     bound = math.sqrt(3.0) * std
-    tensor.data = np.random.uniform(-bound, bound, size=tensor.data.shape)
+    xp = tensor.xp
+    tensor.data = xp.random.uniform(-bound, bound, size=tensor.data.shape).astype(tensor.data.dtype)
     return tensor
 
 
@@ -52,5 +55,6 @@ def kaiming_normal_(tensor: Tensor, a: float = 0.0) -> Tensor:
     fan_in, _ = _calculate_fan_in_and_fan_out(tensor)
     gain = math.sqrt(2.0 / (1.0 + a ** 2))
     std = gain / math.sqrt(fan_in)
-    tensor.data = np.random.normal(0.0, std, size=tensor.data.shape)
+    xp = tensor.xp
+    tensor.data = xp.random.normal(0.0, std, size=tensor.data.shape).astype(tensor.data.dtype)
     return tensor

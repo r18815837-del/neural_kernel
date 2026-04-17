@@ -125,7 +125,8 @@ class Module:
             raise KeyError(f"Unexpected keys in state_dict: {unexpected_keys}")
 
         for name, param in current_params.items():
-            value = np.array(state_dict[name], copy=True)
+            xp = param.xp
+            value = xp.array(state_dict[name], copy=True) if xp is not np else np.array(state_dict[name], copy=True)
 
             if param.data.shape != value.shape:
                 raise ValueError(
@@ -136,7 +137,8 @@ class Module:
             param.data = param._backend.asarray(value, dtype=param.data.dtype)
 
         for name, buf in current_buffers.items():
-            value = np.array(state_dict[name], copy=True)
+            xp = buf.xp
+            value = xp.array(state_dict[name], copy=True) if xp is not np else np.array(state_dict[name], copy=True)
 
             if buf.data.shape != value.shape:
                 raise ValueError(

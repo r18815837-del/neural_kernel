@@ -23,11 +23,11 @@ class BatchNorm1d(Module):
 
         if affine:
             self.weight = Tensor(
-                np.ones(num_features, dtype=np.float64),
+                np.ones(num_features, dtype=np.float32),
                 requires_grad=True,
             )
             self.bias = Tensor(
-                np.zeros(num_features, dtype=np.float64),
+                np.zeros(num_features, dtype=np.float32),
                 requires_grad=True,
             )
         else:
@@ -36,11 +36,11 @@ class BatchNorm1d(Module):
 
         self.register_buffer(
             "running_mean",
-            np.zeros(num_features, dtype=np.float64),
+            np.zeros(num_features, dtype=np.float32),
         )
         self.register_buffer(
             "running_var",
-            np.ones(num_features, dtype=np.float64),
+            np.ones(num_features, dtype=np.float32),
         )
 
     def forward(self, x: Tensor) -> Tensor:
@@ -95,11 +95,11 @@ class BatchNorm2d(Module):
 
         if affine:
             self.weight = Tensor(
-                np.ones((1, num_features, 1, 1), dtype=np.float64),
+                np.ones((1, num_features, 1, 1), dtype=np.float32),
                 requires_grad=True,
             )
             self.bias = Tensor(
-                np.zeros((1, num_features, 1, 1), dtype=np.float64),
+                np.zeros((1, num_features, 1, 1), dtype=np.float32),
                 requires_grad=True,
             )
         else:
@@ -108,11 +108,11 @@ class BatchNorm2d(Module):
 
         self.register_buffer(
             "running_mean",
-            np.zeros((1, num_features, 1, 1), dtype=np.float64),
+            np.zeros((1, num_features, 1, 1), dtype=np.float32),
         )
         self.register_buffer(
             "running_var",
-            np.ones((1, num_features, 1, 1), dtype=np.float64),
+            np.ones((1, num_features, 1, 1), dtype=np.float32),
         )
 
     def forward(self, x: Tensor) -> Tensor:
@@ -169,11 +169,11 @@ class LayerNorm(Module):
 
         if affine:
             self.weight = Tensor(
-                np.ones(self.normalized_shape, dtype=np.float64),
+                np.ones(self.normalized_shape, dtype=np.float32),
                 requires_grad=True,
             )
             self.bias = Tensor(
-                np.zeros(self.normalized_shape, dtype=np.float64),
+                np.zeros(self.normalized_shape, dtype=np.float32),
                 requires_grad=True,
             )
         else:
@@ -215,11 +215,11 @@ class GroupNorm(Module):
 
         if affine:
             self.weight = Tensor(
-                np.ones((1, num_channels, 1, 1), dtype=np.float64),
+                np.ones((1, num_channels, 1, 1), dtype=np.float32),
                 requires_grad=True,
             )
             self.bias = Tensor(
-                np.zeros((1, num_channels, 1, 1), dtype=np.float64),
+                np.zeros((1, num_channels, 1, 1), dtype=np.float32),
                 requires_grad=True,
             )
         else:
