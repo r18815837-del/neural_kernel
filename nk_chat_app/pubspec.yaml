@@ -1,0 +1,47 @@
+name: nk_chat
+description: Local ChatGPT-like desktop UI for Ollama — part of neural_kernel.
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+  flutter: '>=3.16.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.1
+  flutter_markdown: ^0.7.3
+  flutter_highlight: ^0.7.0
+  provider: ^6.1.2
+  uuid: ^4.4.0
+  cupertino_icons: ^1.0.8
+
+  # Windows 11 Mica / Acrylic blur — делает окно полупрозрачным.
+  flutter_acrylic: ^1.1.3
+
+  # Доступ к папке %APPDATA% для persistence.
+  path_provider: ^2.1.3
+
+  # LaTeX математика в ответах.
+  flutter_math_fork: ^0.7.2
+
+  # Drag-and-drop файлов на окно.
+  desktop_drop: ^0.4.4
+
+  # Custom title bar + управление окном.
+  window_manager: ^0.3.9
+
+  # Agent mode — инструменты для доступа к файлам.
+  path: ^1.9.0           # path normalization (sandbox защита)
+  glob: ^2.1.2           # glob pattern matching
+  file_picker: ^8.0.6    # выбор workspace через системный диалог
+
+  # Ключ-шорткаты и удобная работа с буфером обмена.
+  # (http уже есть выше)
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true

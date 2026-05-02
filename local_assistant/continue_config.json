@@ -1,0 +1,78 @@
+{
+  "models": [
+    {
+      "title": "Qwen2.5-Coder 7B (local)",
+      "provider": "ollama",
+      "model": "qwen2.5-coder:7b",
+      "apiBase": "http://localhost:11434",
+      "completionOptions": {
+        "temperature": 0.2,
+        "topP": 0.9,
+        "topK": 40,
+        "numCtx": 4096,
+        "maxTokens": 2048
+      },
+      "systemMessage": "You are an expert programming assistant running locally on the user's machine. You specialize in Python, JavaScript/TypeScript, systems programming, and deep learning. Answer concisely, show code examples, and explain only when asked. The user's main project is `neural_kernel` — a from-scratch deep learning framework (NumPy + optional CuPy) with autograd, Transformers, BPE tokenization, and a language-model training pipeline. Be direct and avoid excessive disclaimers."
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "Qwen2.5-Coder 1.5B (autocomplete)",
+    "provider": "ollama",
+    "model": "qwen2.5-coder:1.5b-base",
+    "apiBase": "http://localhost:11434"
+  },
+  "tabAutocompleteOptions": {
+    "useCopyBuffer": false,
+    "maxPromptTokens": 1024,
+    "prefixPercentage": 0.85,
+    "maxSuffixPercentage": 0.2,
+    "debounceDelay": 300,
+    "multilineCompletions": "auto",
+    "useCache": true,
+    "onlyMyCode": true
+  },
+  "embeddingsProvider": {
+    "provider": "ollama",
+    "model": "nomic-embed-text",
+    "apiBase": "http://localhost:11434"
+  },
+  "contextProviders": [
+    { "name": "code",     "params": {} },
+    { "name": "docs",     "params": {} },
+    { "name": "diff",     "params": {} },
+    { "name": "terminal", "params": {} },
+    { "name": "problems", "params": {} },
+    { "name": "folder",   "params": {} },
+    { "name": "codebase", "params": { "nRetrieve": 25, "nFinal": 5 } },
+    { "name": "file",     "params": {} },
+    { "name": "currentFile", "params": {} },
+    { "name": "open",     "params": {} }
+  ],
+  "slashCommands": [
+    { "name": "edit",    "description": "Edit selected code"         },
+    { "name": "comment", "description": "Write comments for code"    },
+    { "name": "share",   "description": "Export chat to markdown"    },
+    { "name": "commit",  "description": "Generate git commit message"},
+    { "name": "test",    "description": "Write tests for selected"   },
+    { "name": "explain", "description": "Explain the selected code"  }
+  ],
+  "customCommands": [
+    {
+      "name": "nk-doc",
+      "prompt": "You are writing docs for the `neural_kernel` project. Given the selected code, write a concise docstring in the style of existing docstrings (brief description, Args, Returns, Raises). Match the existing style, be terse.",
+      "description": "Generate docstring in neural_kernel style"
+    },
+    {
+      "name": "nk-test",
+      "prompt": "Write a pytest test for the selected code. Put it in the style of tests from `tests_parity/` — use numpy for reference, check tensor shapes and numerical parity. Prefer small synthetic inputs. Don't add imports that aren't needed.",
+      "description": "Write pytest test in tests_parity style"
+    },
+    {
+      "name": "nk-review",
+      "prompt": "Review the selected code from the neural_kernel perspective. Check: (1) autograd correctness — does the backward pass match the forward, (2) dtype stability, (3) device compatibility (works on both numpy and cupy backends), (4) edge cases for empty tensors / wrong shapes. Output bullet points, short and direct.",
+      "description": "Code review for neural_kernel style"
+    }
+  ],
+  "docs": [],
+  "allowAnonymousTelemetry": false
+}

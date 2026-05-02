@@ -455,17 +455,9 @@ def main():
     example_9_error_handling()
     example_10_real_world_workflow()
 
-    logger.info("\n")
     logger.info("=" * 60)
-    logger.info("EXAMPLES COMPLETED")
+    logger.info("All examples finished")
     logger.info("=" * 60)
-    logger.info("")
-    logger.info("To use in real project:")
-    logger.info("  1. Set OPENAI_API_KEY environment variable")
-    logger.info("  2. from llm import create_llm_client")
-    logger.info("  3. client = create_llm_client()")
-    logger.info("  4. response = client.complete_sync(messages)")
-    logger.info("")
 
 
 if __name__ == "__main__":

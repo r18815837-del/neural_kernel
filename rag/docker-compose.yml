@@ -1,0 +1,27 @@
+# Qdrant — локальная векторная БД для RAG.
+#
+# Запуск:
+#   cd rag
+#   docker compose up -d
+#
+# Остановить:
+#   docker compose down
+#
+# Веб-UI: http://localhost:6333/dashboard
+
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: nk-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"     # HTTP API + dashboard
+      - "6334:6334"     # gRPC API (быстрее, опционально)
+    volumes:
+      # Данные хранятся персистентно в папке rag/qdrant_storage/
+      - ./qdrant_storage:/qdrant/storage
+    environment:
+      # Логирование — спокойное, без шума
+      QDRANT__LOG_LEVEL: INFO
+      # Лимит памяти — Qdrant и так лёгкий, но на всякий случай
+      QDRANT__SERVICE__MAX_REQUEST_SIZE_MB: 64

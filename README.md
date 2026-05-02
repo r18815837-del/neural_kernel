@@ -1,84 +1,84 @@
 # Neural Kernel
 
-A learning project — a small deep learning framework written from scratch in Python. Nothing production-grade, just an exercise in understanding how things work under the hood: autograd, backpropagation, transformers, tokenizers, and all that.
+AI-powered coding assistant — custom ML framework + FastAPI backend + VS Code extension.
 
-No PyTorch, no TensorFlow — just NumPy (and optionally CuPy for GPU).
+A learning project built from scratch in Python. No PyTorch, no TensorFlow — just NumPy (and optionally CuPy for GPU).
 
-## What's here
+## Architecture
 
-**Core framework** (`kernel/`) — tensors with autograd, basic layers (Linear, Conv2d, Embedding, BatchNorm, LayerNorm, Dropout), a simple Transformer stack, BPE tokenizer, SGD/Adam optimizers, and a data loader. Nothing fancy, but it works and the gradients are correct (checked against PyTorch).
-
-**BPE tokenizer** (`kernel/tokenization/`) — byte-pair encoding trained from scratch. GPT-2 style pre-tokenization. Saves to JSON.
-
-**Training scripts** (`scripts/`) — download Wikipedia articles, train BPE, train a small language model. Can run on CPU or GPU.
-
-**Cognition engine** (`cognition/`) — an experimental Q&A pipeline with memory, Wikipedia search, a coding assistant that can analyze Python/Dart code, and a sandboxed code executor. More of a playground than anything serious.
-
-**REST API** (`api/`) — FastAPI server with JWT auth, rate limiting, error handling. Endpoints for the cognition engine, code analysis, project generation, session history.
-
-**Persistence** (`persistence/`) — SQLite storage for sessions, memory, projects, artifacts. Thread-safe, with migrations.
-
-**Flutter client** (`flutter_client/`) — a simple mobile/desktop UI. Riverpod + GoRouter.
+```
+neural_kernel/
+│
+├── ML Core ─────────────────────────────────────────────
+│   Deep learning framework from scratch.
+│   Autograd, layers, optimizers, BPE tokenizer, training.
+│   ├── kernel/          — Core ML engine
+│   ├── models/          — Model architectures (LM, tokenizers)
+│   ├── benchmarks/      — ML performance benchmarks
+│   ├── checkpoints/     — Saved weights
+│   ├── data/            — Training corpus
+│   ├── tests_cuda/      — GPU tests
+│   └── tests_parity/    — Numerical parity tests
+│
+├── API Backend ─────────────────────────────────────────
+│   FastAPI server — code analysis, fix, test generation, LLM integration.
+│   ├── api/             — Routes, auth, middleware, config
+│   ├── cognition/       — CodingSpecialist, CodeExecutor
+│   ├── llm/             — LLM clients (Anthropic, OpenAI, Ollama)
+│   ├── persistence/     — SQLite store, sessions, versioning
+│   ├── nk_app/          — AssistantManager orchestration
+│   ├── integration/     — Client contract service
+│   ├── scripts/         — Utility scripts
+│   └── tests/           — API and integration tests
+│
+├── VS Code Extension ───────────────────────────────────
+│   Sidebar AI assistant with 17 commands.
+│   Explain, Fix, Generate Tests, Debug, Review, Search, Multi-Edit.
+│   ├── integrations/vscode/extension.js  — Entry point
+│   ├── integrations/vscode/chatView.js   — Webview UI
+│   ├── integrations/vscode/src/          — Modules (commands, context, debug, review)
+│   └── integrations/vscode/benchmarks/   — 18 eval fixtures + runner
+│
+├── Flutter Client ──────────────────────────────────────
+│   └── flutter_client/  — Mobile client (Android/iOS)
+│
+└── Other ───────────────────────────────────────────────
+    ├── company_agents/  — Multi-agent workflows
+    ├── execution/       — Code execution sandbox
+    ├── runtime/         — Runtime specs and text processing
+    ├── examples/        — Example scripts
+    └── docs/            — Documentation
+```
 
 ## Quick start
 
 ```bash
-git clone https://github.com/r18815837-del/neural_kernel.git
-cd neural_kernel
-pip install -e .[dev]
+# 1. Install dependencies
+pip install -r requirements.txt
 
-# Run tests
-pytest -q tests
+# 2. Configure LLM
+cp .env.example .env
+# Edit .env: set NK_LLM_PROVIDER=anthropic and ANTHROPIC_API_KEY
 
-# Train a small LM
-python scripts/prepare_data.py --max-articles 2000
-python scripts/train_lm.py --epochs 10
+# 3. Start API
+python -m uvicorn api.server:app --reload
 
-# GPU training (needs CuPy + CUDA)
-python scripts/train_lm.py --device cuda --batch-size 64 --epochs 20
+# 4. Run benchmarks
+node integrations/vscode/benchmarks/runBenchmarks.js --verbose
 
-# Start the API
-python run_api.py
-
-# Or with Docker
-docker compose up --build
+# 5. VS Code extension — open integrations/vscode/ in VS Code, press F5
 ```
 
-## Project structure
+## Per-module details
 
-```
-kernel/              Core framework (tensors, autograd, layers, optimizers)
-cognition/           Q&A engine, memory, specialists, code executor
-persistence/         SQLite storage, migrations, lifecycle
-api/                 FastAPI server, auth, middleware
-flutter_client/      Mobile/desktop client
-scripts/             Data prep + training
-tests/               ~250 tests
-tests_parity/        PyTorch parity checks
-```
+Each major module has its own README:
 
-## Some numbers
+- [ML Core](kernel/README.md) — deep learning framework
+- [API Backend](api/README.md) — FastAPI server + LLM integration
+- [VS Code Extension](integrations/vscode/README.md) — sidebar assistant + benchmarks
 
-These are modest — it's a learning project, not a competitor to anything:
+## Version
 
-- MLP on MNIST: ~98% accuracy
-- CNN on MNIST: ~94% accuracy
-- Language model: 1.85M params, 4-layer Transformer, loss 7.27 → 5.79 over 10 epochs on CPU
-- ~250 tests (core, cognition, persistence, API, auth)
-- PyTorch parity tests pass for the main ops
-
-## Requirements
-
-- Python 3.10+
-- NumPy
-- For API: `pip install -r requirements.txt`
-- For GPU: CuPy + CUDA 12.x
-- For Flutter client: Flutter SDK 3.x
-
-## License
-
-MIT
-
-## Author
-
-Raian
+- Extension: **v0.9.4**
+- Backend: **v0.9.4** (with LLM integration)
+- Next: **v1.0.0-beta** (docs, demo, packaging)
